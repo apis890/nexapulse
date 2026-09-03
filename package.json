@@ -1,0 +1,18 @@
+{
+  "name": "portal_berita",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "commonjs",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "rss-parser": "^3.13.0",
+    "serverless-http": "^4.0.0"
+  }
+}
