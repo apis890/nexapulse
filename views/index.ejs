@@ -6,6 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NexaPulse — Portal Berita & Informasi Terkini</title>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-bg: #1e293b;
+            --header-bg: rgba(30, 41, 59, 0.9);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --input-bg: #0f172a;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --input-bg: #f8fafc;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,18 +34,64 @@
         }
 
         body {
-            background: #0f172a;
-            color: #f8fafc;
+            background: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
         }
 
-        /* Header & Brand */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        #page-loader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid #38bdf8;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        .loading-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         header {
-            background: rgba(30, 41, 59, 0.9);
+            background: var(--header-bg);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid var(--border-color);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -40,7 +106,7 @@
         .logo {
             font-size: 1.4rem;
             font-weight: 800;
-            color: #f8fafc;
+            color: var(--text-color);
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
@@ -69,7 +135,7 @@
         }
 
         nav a {
-            color: #94a3b8;
+            color: var(--text-muted);
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
@@ -80,21 +146,20 @@
 
         nav a:hover,
         nav a.active {
-            color: #f8fafc;
+            color: var(--text-color);
             background: rgba(56, 189, 248, 0.15);
             border: 1px solid rgba(56, 189, 248, 0.3);
         }
 
-        /* Form Pencarian */
         .search-form {
             display: flex;
             gap: 0.5rem;
         }
 
         .search-input {
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #f8fafc;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
             padding: 0.4rem 0.8rem;
             border-radius: 8px;
             font-size: 0.85rem;
@@ -115,16 +180,59 @@
             font-weight: 600;
             cursor: pointer;
             font-size: 0.85rem;
-            transition: opacity 0.2s;
         }
 
-        .search-btn:hover {
-            opacity: 0.9;
+        .breaking-ticker {
+            background: rgba(56, 189, 248, 0.1);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .ticker-badge {
+            background: #38bdf8;
+            color: #0f172a;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-right: 1rem;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .ticker-wrap {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .ticker-move {
+            display: inline-block;
+            animation: ticker 25s linear infinite;
+            font-size: 0.85rem;
+            color: var(--text-color);
+        }
+
+        .ticker-move span {
+            margin-right: 3rem;
+        }
+
+        @keyframes ticker {
+            0% {
+                transform: translate3d(100%, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(-100%, 0, 0);
+            }
         }
 
         .container {
             max-width: 1100px;
-            margin: 2.5rem auto;
+            margin: 2rem auto;
             padding: 0 1rem;
             flex: 1;
             width: 100%;
@@ -134,21 +242,36 @@
             margin-bottom: 2.5rem;
             border-left: 4px solid #38bdf8;
             padding-left: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        h1 {
-            color: #f8fafc;
+        .hero-title-area h1 {
+            color: var(--text-color);
             margin-bottom: 0.25rem;
             font-size: 1.75rem;
             font-weight: 700;
         }
 
-        p {
-            color: #94a3b8;
+        .hero-title-area p {
+            color: var(--text-muted);
             font-size: 0.95rem;
         }
 
-        /* Grid Kartu Berita */
+        .digital-clock {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            white-space: nowrap;
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -156,14 +279,14 @@
         }
 
         .card {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 14px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: transform 0.2s, border-color 0.2s, background 0.3s;
         }
 
         .card:hover {
@@ -176,7 +299,7 @@
             width: 100%;
             height: 170px;
             object-fit: cover;
-            border-bottom: 1px solid rgba(255, 255, 258, 0.08);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .card-body {
@@ -194,7 +317,7 @@
         }
 
         .card h3 a {
-            color: #f8fafc;
+            color: var(--text-color);
             text-decoration: none;
             transition: color 0.2s;
         }
@@ -205,11 +328,8 @@
 
         .meta {
             font-size: 0.8rem;
-            color: #94a3b8;
+            color: var(--text-muted);
             margin-top: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .badge {
@@ -227,12 +347,11 @@
         .not-found {
             grid-column: 1 / -1;
             text-align: center;
-            color: #94a3b8;
+            color: var(--text-muted);
             padding: 3rem 0;
             font-size: 1.1rem;
         }
 
-        /* Pagination Rapi */
         .pagination {
             display: flex;
             justify-content: center;
@@ -244,22 +363,17 @@
 
         .pagination a,
         .pagination span {
-            background: #1e293b;
-            color: #f8fafc;
+            background: var(--card-bg);
+            color: var(--text-color);
             padding: 0.5rem 0.9rem;
             border-radius: 8px;
             text-decoration: none;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
             font-size: 0.9rem;
             font-weight: 500;
-            transition: background 0.2s;
         }
 
-        .pagination a:hover {
-            background: #38bdf8;
-            color: #0f172a;
-        }
-
+        .pagination a:hover,
         .pagination .active {
             background: #38bdf8;
             color: #0f172a;
@@ -270,16 +384,15 @@
         .pagination .dots {
             background: transparent;
             border: none;
-            color: #94a3b8;
+            color: var(--text-muted);
         }
 
-        /* Footer Profesional */
         footer {
-            background: #1e293b;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
             text-align: center;
             padding: 1.5rem;
-            color: #94a3b8;
+            color: var(--text-muted);
             font-size: 0.85rem;
             margin-top: 4rem;
         }
@@ -288,12 +401,59 @@
             color: #38bdf8;
             font-weight: 600;
         }
+
+        .floating-theme-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 85px;
+            right: 28px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 9998;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- Header Brand & Search -->
+    <div id="page-loader">
+        <div class="spinner"></div>
+        <div class="loading-text">Memuat Berita...</div>
+    </div>
+
     <header>
         <a href="/" class="logo">
             Nexa<span>Pulse</span><span class="logo-dot"></span>
@@ -306,7 +466,6 @@
                 </a>
                 <% }) %>
 
-                    <!-- Kolom Search -->
                     <form action="/" method="GET" class="search-form">
                         <input type="hidden" name="category" value="<%= currentCategoryKey %>">
                         <input type="text" name="q" placeholder="Cari berita..." value="<%= searchQuery %>"
@@ -316,22 +475,40 @@
         </nav>
     </header>
 
+    <div class="breaking-ticker">
+        <div class="ticker-badge">🔴 Breaking News</div>
+        <div class="ticker-wrap">
+            <div class="ticker-move">
+                <% if (articles && articles.length> 0) { %>
+                    <% articles.slice(0, 5).forEach(article=> { %>
+                        <span>⚡ <%= article.title %> (<%= article.sourceName %>)</span>
+                        <% }) %>
+                            <% } else { %>
+                                <span>Selamat datang di NexaPulse — Portal Berita & Informasi Terkini Real-Time.</span>
+                                <% } %>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <div class="hero-section">
-            <h1>Eksplorasi Berita Terkini</h1>
-            <p>
-                <% if (searchQuery) { %>
-                    Hasil pencarian untuk: "<strong>
-                        <%= searchQuery %>
-                    </strong>"
-                    <% } else { %>
-                        Kurasi informasi real-time dan terpercaya dari berbagai lini media digital.
-                        <% } %>
-            </p>
+            <div class="hero-title-area">
+                <h1>Eksplorasi Berita Terkini</h1>
+                <p>
+                    <% if (searchQuery) { %>
+                        Hasil pencarian untuk: "<strong>
+                            <%= searchQuery %>
+                        </strong>"
+                        <% } else { %>
+                            Kurasi informasi real-time dan terpercaya dari berbagai lini media digital.
+                            <% } %>
+                </p>
+            </div>
+            <div class="digital-clock" id="live-clock">00:00:00 WIB</div>
         </div>
 
         <div class="grid">
-            <% if (articles.length> 0) { %>
+            <% if (articles && articles.length> 0) { %>
                 <% articles.forEach(article=> { %>
                     <div class="card">
                         <img src="<%= article.imageUrl %>" alt="Thumbnail" class="card-img" loading="lazy">
@@ -355,7 +532,6 @@
                             <% } %>
         </div>
 
-        <!-- Pagination -->
         <% if (totalPages> 1) { %>
             <div class="pagination">
                 <% let maxVisiblePages=5; let startPage=Math.max(1, currentPage - Math.floor(maxVisiblePages / 2)); let
@@ -405,11 +581,73 @@
             <% } %>
     </div>
 
-    <!-- Footer Profesional -->
     <footer>
         <p>&copy; 2026 <span>NexaPulse</span>. All rights reserved. Automated News Intelligence System.</p>
     </footer>
 
+    <button class="floating-theme-btn" onclick="toggleTheme()" id="theme-btn">☀️ Terang</button>
+    <button class="back-to-top" id="backToTopBtn" onclick="scrollToTop()" title="Kembali ke atas">▲</button>
+
+    <script>
+        window.addEventListener('load', function () {
+            const loader = document.getElementById('page-loader');
+            if (loader) loader.classList.add('fade-out');
+        });
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateButtonText(savedTheme);
+
+        function toggleTheme() {
+            let currentTheme = document.documentElement.getAttribute('data-theme');
+            let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateButtonText(newTheme);
+        }
+
+        function updateButtonText(theme) {
+            const btn = document.getElementById('theme-btn');
+            if (btn) {
+                btn.innerHTML = theme === 'light' ? '🌙 Gelap' : '☀️ Terang';
+            }
+        }
+
+        window.addEventListener('scroll', function () {
+            const btn = document.getElementById('backToTopBtn');
+            if (btn) {
+                if (window.scrollY > 300) {
+                    btn.classList.add('show');
+                } else {
+                    btn.classList.remove('show');
+                }
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+
+            hours = hours < 10 ? '0' + hours : hours;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            const timeString = `${hours}:${minutes}:${seconds} WIB`;
+            const clockElement = document.getElementById('live-clock');
+            if (clockElement) {
+                clockElement.innerText = timeString;
+            }
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
 </body>
 
 </html>
